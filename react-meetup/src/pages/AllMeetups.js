@@ -7,28 +7,35 @@ const endpoint = "meetups.json";
 const urlToFetch = url + endpoint;
 
 const AllMeetupsPage = () => {
-
     const [isLoading, setIsLoading] = useState(true);
     const [loadedMeetups, setLoadedMeetups] = useState([]);
 
-    useEffect(()=> {
-        fetch(urlToFetch
-            ).then(response => response.json()
-            ).then(data => {
+    useEffect(() => {
+        setIsLoading(true);
+
+        fetch(urlToFetch)
+            .then((response) => response.json())
+            .then((data) => {
+                const meetups = [];
+
+                for (const key in data) {
+                    const meetup = {
+                        id: key,
+                        ...data[key],
+                    };
+                    meetups.push(meetup);
+                }
                 setIsLoading(false);
-                setLoadedMeetups(data);
-            })
-
-
-
-    },[])
+                setLoadedMeetups(meetups);
+            });
+    }, []);
 
     if (isLoading) {
         return (
             <section>
                 <p>Loading ...</p>
             </section>
-        )
+        );
     }
 
     return (
